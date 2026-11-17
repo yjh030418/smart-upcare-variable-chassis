@@ -43,34 +43,39 @@ Lift (/lift/state)   ─┘            │ USB Serial
 
 ## 기구 설계
 
-섀시와 몸체 연결부, LiDAR 마운트를 Fusion 360으로 직접 설계하고 3D 프린팅으로 제작했습니다. 아래 STL 파일을 누르면 GitHub에서 3D로 돌려볼 수 있습니다.
+섀시, 몸체 연결부, LiDAR 마운트를 Fusion 360으로 직접 설계하고 3D 프린팅으로 제작했습니다. **설계를 네 번 갈아엎은 끝에** 나온 최종본입니다. 아래 STL 파일을 누르면 GitHub에서 3D로 돌려볼 수 있습니다.
 
 | 조립 형상 | 분해도 |
 | --- | --- |
 | <img src="hardware/render_assembly.png" width="400"> | <img src="hardware/render_exploded.png" width="400"> |
 
+### 최종 설계의 핵심
+
+- **교각 구조에서 착안한 섀시 다리.** 동네 복현오거리의 교각 구조에서 아이디어를 얻어, 섀시 4개에 **T형·H형 단면**을 적용해 강성을 확보했습니다.
+- **2조각 몸체 연결부.** 몸체 연결부를 두 조각으로 나눠 가운데에 약 146 mm의 공간을 만들고, 그 안에 Jetson Orin Nano와 ESP32가 들어가도록 했습니다. 동시에 섀시와 상부 리프트 하중을 버티는 정역학적 강성을 확보했습니다.
+- **출력성을 고려한 형상.** 3D 프린터 출력 시간과 서포트를 줄이기 위해 경사각을 최소화하고 공중에 뜬 구조(오버행)를 없앴습니다. 힘을 받는 방향과 적층 방향이 수직이 되도록 해 뒤틀림을 막고 전단 한계를 높였습니다.
+- 구조 설계에는 R.C. Hibbeler의 *Engineering Mechanics: Statics*를 참고했습니다.
+
 ### 설계 변경: 기존 설계의 문제 → 최종 설계
 
 | 기존 설계의 문제 | 최종 설계 |
 | --- | --- |
-| Jetson이 들어갈 공간이 부족함 (심각) | 몸체 연결부를 새로 설계해 Jetson Orin Nano와 모터 드라이버 공간을 확보하고, 높이를 최소화해 저중심 설계 |
-| 3D 프린터 적층 방향이 힘을 받는 수직 방향이라 다리 강성이 부족함 | 힘을 받는 방향과 적층 방향이 수직이 되도록 설계해 뒤틀림을 막고 전단 한계를 높임 |
-| 출력 시간과 서포트가 너무 많이 필요함 | 출력 효율을 위해 몸체 강성을 약간 양보 (실차 조립에서 문제없음을 확인) |
+| Jetson이 들어갈 공간이 부족함 (심각) | 몸체 연결부를 2조각으로 나눠 중앙에 Jetson·ESP32 공간 확보, 높이를 최소화해 저중심 설계 |
+| 적층 방향이 힘을 받는 수직 방향이라 다리 강성이 부족함 | T·H 단면 적용, 힘 방향과 적층 방향을 수직으로 배치 |
+| 출력 시간과 서포트가 너무 많이 필요함 | 경사각 최소화, 오버행 제거. 몸체 강성은 약간 양보했고 실차 조립에서 문제없음을 확인 |
 
 ### 부품별 설계 포인트
 
 | 부품 | 크기 (mm) | 설계 포인트 | 파일 |
 | --- | --- | --- | --- |
-| 섀시 ×4 | 202 × 150 × 247 | 다리에 T 구조 적용, 응력 집중을 피하는 유선형·둔각 설계, 볼캐스터 휠 하중을 받는 수직 보강면 두께 추가, 접힐 때 맞물려 들어가도록 절단면에 경사 | [q1](hardware/shell_q1.stl) · [q2](hardware/shell_q2.stl) · [q3](hardware/shell_q3.stl) · [q4](hardware/shell_q4.stl) |
-| 몸체 연결부 ×4 | 98 × 66 × 47 | 연결부 2개를 합쳐 흔들림 최소화, 'ㄷ' 구조로 섀시와 상부 리프트 무게까지 지지 | [1](hardware/body_connector_1.stl) · [2](hardware/body_connector_2.stl) · [3](hardware/body_connector_3.stl) · [4](hardware/body_connector_4.stl) |
-| LiDAR 마운트 | Ø76 × 64 | 탈부착식, LiDAR 무게와 회전 원심력에 의한 진동을 막는 삼각 리브 | [lidar_mount.stl](hardware/lidar_mount.stl) |
-| 핀 | 18 × 25 × 5 | 부품 고정용 | [pin.stl](hardware/pin.stl) |
+| 섀시 ×4 | 222 × 170.5 × 170 | T·H 단면, 응력 집중을 피하는 유선형·둔각 설계, 볼캐스터 휠 하중을 받는 수직 보강면, 접힐 때 맞물려 들어가도록 절단면에 경사 | [q1](hardware/shell_q1.stl) · [q2](hardware/shell_q2.stl) · [q3](hardware/shell_q3.stl) · [q4](hardware/shell_q4.stl) |
+| 몸체 연결부 ×2 | 102.6 × 155 × 46, 71.7 × 155 × 46 | 'ㄷ' 구조로 섀시와 리프트 하중 지지, 두 조각 사이 약 146 mm에 Jetson·ESP32 수납 | [1](hardware/body_connector_1.stl) · [2](hardware/body_connector_2.stl) |
+| LiDAR 마운트 | Ø76 × 60 | 탈부착식, LiDAR 무게와 회전 원심력에 의한 진동을 막는 삼각 리브 | [lidar_mount.stl](hardware/lidar_mount.stl) |
 
 <p>
-<img src="hardware/render_shell_quadrant.png" width="200">
-<img src="hardware/render_body_connectors.png" width="200">
-<img src="hardware/render_lidar_mount.png" width="200">
-<img src="hardware/render_pin.png" width="200">
+<img src="hardware/render_shell_quadrant.png" width="260">
+<img src="hardware/render_body_connectors.png" width="260">
+<img src="hardware/render_lidar_mount.png" width="260">
 </p>
 
 ### 남은 문제
@@ -119,7 +124,7 @@ ROS2 노드 `chassis_controller`가 세 토픽을 구독하고, 아래 우선순
 | 7월 초 | 외곽 모델링: H빔·T빔·삼각 리브, 높은 지지대 구조 | 막대 하나가 섀시 무게를 모두 지지해 파손 위험 → 경량화와 강성 확보를 함께 고려 |
 | 7월 초 | 폭 조절 v1: MKS DLC32 + A4988, AccelStepper 펌웨어, Jetson과 UART 통신, 리프트 높이에 따라 단계 조절 | 스테퍼 발열이 큼 → 목표 위치에 도달하면 드라이버 전원을 끔 (웜기어라 전원이 꺼져도 위치 유지) |
 | 7월 말 | 부품 통합 점검 | Jetson·배터리 공간 부족, LiDAR는 리프트 위에 달 수 없음 → 본체 연결부를 타이트하게 재설계, LiDAR 마운트 별도 제작 |
-| 9월 | 섀시·몸체 연결부 재설계 | Jetson 공간 부족, 적층 방향 때문에 다리 강성 부족 → 몸체 연결부 재설계, T 구조와 적층 방향 변경 (위 기구 설계 참고) |
+| 9월 | 섀시·몸체 연결부 최종 설계 (총 4차례 재설계) | Jetson 공간 부족, 적층 방향 때문에 다리 강성 부족 → 2조각 몸체 연결부, 교각에서 착안한 T·H 단면 (위 기구 설계 참고) |
 | 이후 | GRBL 시리얼 제어 + ROS2 노드로 전환 | 80 mm까지 펼치면 하드웨어가 파손 → 가동 범위를 0~55 mm로 제한 |
 | 10월 | 최종 시연 | Jetson USB 포트가 부족해 LED와 리프트 ESP32를 동시에 연결하지 못함, 리프트 스테퍼 미작동, 이동 중 충격으로 액추에이터 연결부 파손 |
 
