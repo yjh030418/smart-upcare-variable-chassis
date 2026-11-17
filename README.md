@@ -41,7 +41,34 @@ Lift (/lift/state)   ─┘            │ USB Serial
 | 가동 범위 | 0~55 mm (기구 한계 보호를 위해 55 mm로 제한) |
 | 원점 | 완전히 접힌 위치를 리밋 스위치로 감지 |
 
+## 기구 설계
+
+외곽과 내부 연결부를 Fusion 360으로 직접 설계하고 3D 프린팅으로 제작했습니다. 아래 STL 파일을 누르면 GitHub에서 3D로 돌려볼 수 있습니다.
+
+| 조립 형상 | 분해도 |
+| --- | --- |
+| <img src="hardware/render_assembly.png" width="400"> | <img src="hardware/render_exploded.png" width="400"> |
+
+| 부품 | 크기 (mm) | 설계 포인트 | 파일 |
+| --- | --- | --- | --- |
+| 외곽 쉘 ×4 | 202 × 150 × 247 | 출력 크기에 맞춰 4개 사분면으로 분할, H빔·T빔·삼각 리브로 강성 보강 | [q1](hardware/shell_q1.stl) · [q2](hardware/shell_q2.stl) · [q3](hardware/shell_q3.stl) · [q4](hardware/shell_q4.stl) |
+| 본체 연결부 ×4 | 98 × 66 × 47 | Jetson·배터리 공간을 확보하도록 타이트하게 재설계 | [1](hardware/body_connector_1.stl) · [2](hardware/body_connector_2.stl) · [3](hardware/body_connector_3.stl) · [4](hardware/body_connector_4.stl) |
+| LiDAR 마운트 | Ø76 × 64 | 리프트와 분리해 고정 높이에서 가려지지 않도록 별도 설계 | [lidar_mount.stl](hardware/lidar_mount.stl) |
+| 핀 | 18 × 25 × 5 | 부품 고정용 | [pin.stl](hardware/pin.stl) |
+
+<p>
+<img src="hardware/render_shell_quadrant.png" width="200">
+<img src="hardware/render_body_connectors.png" width="200">
+<img src="hardware/render_lidar_mount.png" width="200">
+<img src="hardware/render_pin.png" width="200">
+</p>
+
+- 수직 하중을 버텨야 해서 높이가 높은 지지대 구조를 썼고, 필라멘트가 수평으로 쌓이도록 출력 방향을 정했습니다.
+
 ## 제어 로직
+
+<img src="docs/control_flow.png" width="600">
+
 
 ROS2 노드 `chassis_controller`가 세 토픽을 구독하고, 아래 우선순위로 목표 폭을 정합니다.
 
@@ -72,6 +99,23 @@ ROS2 노드 `chassis_controller`가 세 토픽을 구독하고, 아래 우선순
 - `Z`: 현재 위치를 수동으로 원점 설정
 - `1` / `2` / `3`: 0 / 27.5 / 55 mm 위치로 이동
 - `W/S/A/D/R/F`: 축별 개별 조그
+
+## 개발 과정과 문제 해결
+
+| 시기 | 진행 | 문제 → 대응 |
+| --- | --- | --- |
+| 7월 초 | 외곽 모델링: H빔·T빔·삼각 리브, 높은 지지대 구조 | 막대 하나가 섀시 무게를 모두 지지해 파손 위험 → 경량화와 강성 확보를 함께 고려 |
+| 7월 초 | 폭 조절 v1: MKS DLC32 + A4988, AccelStepper 펌웨어, Jetson과 UART 통신, 리프트 높이에 따라 단계 조절 | 스테퍼 발열이 큼 → 목표 위치에 도달하면 드라이버 전원을 끔 (웜기어라 전원이 꺼져도 위치 유지) |
+| 7월 말 | 부품 통합 점검 | Jetson·배터리 공간 부족, LiDAR는 리프트 위에 달 수 없음 → 본체 연결부를 타이트하게 재설계, LiDAR 마운트 별도 제작 |
+| 이후 | GRBL 시리얼 제어 + ROS2 노드로 전환 | 80 mm까지 펼치면 하드웨어가 파손 → 가동 범위를 0~55 mm로 제한 |
+| 10월 | 최종 시연 | Jetson USB 포트가 부족해 LED와 리프트 ESP32를 동시에 연결하지 못함, 리프트 스테퍼 미작동, 이동 중 충격으로 액추에이터 연결부 파손 |
+
+### 배운 점
+
+- **마감이 성능이다.** 튼튼하고 유격 없이 만들고, 브레드보드 대신 PCB와 맞춤 부품을 써야 합니다.
+- 상용 전선은 무겁고 유연하지 않아 배선까지 설계에 포함해야 합니다.
+- 팀원 작업물 통합은 마지막이 아니라 **중간중간 반드시** 해야 합니다.
+- MCU·보드의 포트 수 같은 제약(Jetson USB 4개)을 처음부터 설계에 넣어야 합니다.
 
 ## 팀
 
