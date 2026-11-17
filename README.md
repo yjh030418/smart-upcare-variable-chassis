@@ -3,7 +3,11 @@
 > 🏆 **2026 한이음 드림업 공모전 동상**
 > AI 멀티모달 가변 형상 돌봄 로봇(AMR) 중 **가변폭 섀시**의 기구 설계와 제어
 
-<!-- 📷 동작 영상 GIF나 사진을 여기에 넣으세요: ![demo](docs/demo.gif) -->
+## 시연 영상
+
+[![Smart Up-care 섀시·리프트 시연](https://img.youtube.com/vi/37wpQJQxAOU/hqdefault.jpg)](https://www.youtube.com/watch?v=37wpQJQxAOU)
+
+▶ 이미지를 누르면 YouTube에서 가변폭 섀시와 리프트 동작 영상을 볼 수 있습니다.
 
 ## 개요
 
