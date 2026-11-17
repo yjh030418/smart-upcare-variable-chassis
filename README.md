@@ -5,7 +5,9 @@
 
 ## 시연 영상
 
-[![Smart Up-care 섀시·리프트 시연](https://img.youtube.com/vi/37wpQJQxAOU/hqdefault.jpg)](https://www.youtube.com/watch?v=37wpQJQxAOU)
+| 시연 1 | 시연 2 |
+| --- | --- |
+| [![Smart Up-care 시연 1](https://img.youtube.com/vi/37wpQJQxAOU/hqdefault.jpg)](https://www.youtube.com/watch?v=37wpQJQxAOU) | [![Smart Up-care 시연 2](https://img.youtube.com/vi/UWuaxsKUlSs/hqdefault.jpg)](https://www.youtube.com/watch?v=UWuaxsKUlSs) |
 
 ▶ 이미지를 누르면 YouTube에서 가변폭 섀시와 리프트 동작 영상을 볼 수 있습니다.
 
